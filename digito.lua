@@ -15,7 +15,7 @@ gui.dialog = iup.dialog{
 				name  = "letras1",
 				value = "RE",
 				mask  = "/l/l",
-				visiblecolumns = "2",
+				visiblecolumns = "3",
 			},
 			iup.text{
 				name = "numeros1",
@@ -31,7 +31,7 @@ gui.dialog = iup.dialog{
 				name  = "letras2",
 				value = "BR",
 				mask  = "/l/l",
-				visiblecolumns = "2",
+				visiblecolumns = "3",
 			},
 		},
 		iup.text{
