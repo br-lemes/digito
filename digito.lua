@@ -111,7 +111,7 @@ function gui.dialog:k_any(k)
 			n2 = tonumber(n2)
 			if n2 < n1 then n1, n2 = n2, n1 end
 			if n2 - n1 > 50 then
-				n2 = n1 + 50
+				n2 = n1 + 49
 			end
 			for i = n1, n2 do
 				gui.resultado.value = gui.resultado.value ..
