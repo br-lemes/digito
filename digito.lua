@@ -5,7 +5,7 @@ gui = { }
 
 gui.dialog = iup.dialog{
 	title = "Digito Verificador",
-	font  = "HELVETICA_BOLD_12",
+	font  = "Helvetica, Bold 12",
 	iup.vbox{
 		margin = "10x10",
 		gap = "10",
