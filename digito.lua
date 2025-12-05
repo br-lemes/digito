@@ -50,7 +50,7 @@ function gui.iupnames(self, elem)
 		end
 	end
 	local i = 1
-	while elem[i] do
+	while elem and elem[i] do
 		self:iupnames(elem[i])
 		i = i + 1
 	end
@@ -71,11 +71,8 @@ function gui.calcdv(xreg)
 	dv = dv + tonumber(xreg:sub(8,8))*7
 	dv = dv * 10
 	dv = dv % 11
-	if (dv == 0) then
-		dv = 5
-	elseif (dv == 10) then
-		dv=0
-	end
+	if (dv == 0) then return 5 end
+	if (dv == 10) then return 0 end
 	return dv
 end
 
@@ -102,26 +99,35 @@ function gui.dialog:k_any(k)
 	if k == iup.K_ESC then
 		self:close_cb()
 	elseif k == iup.K_CR then
-		gui.resultado.value = ""
-		local n1 = gui.numeros1.value
-		local n2 = gui.numeros2.value
-		if n1 ~= "" and #n1 == 8 then
-			if n2 == "" and #n2 ~= 8 then n2 = n1 end
-			n1 = tonumber(n1)
-			n2 = tonumber(n2)
-			if n2 < n1 then n1, n2 = n2, n1 end
-			if n2 - n1 > 50 then
-				n2 = n1 + 49
-			end
-			for i = n1, n2 do
-				gui.resultado.value = gui.resultado.value ..
-					gui.letras1.value:upper() ..
-						string.format("%08d", i) ..
-						tostring(gui.calcdv(i)) ..
-					gui.letras2.value:upper() .. "\n"
-			end
-		end
+		gui.resultado.value = gui.sequencia(
+			gui.letras1.value,
+			gui.numeros1.value,
+			gui.numeros2.value,
+			gui.letras2.value
+		)
 	end
+end
+
+function gui.sequencia(letras1, numeros1, numeros2, letras2)
+	if numeros1 == "" or #numeros1 ~= 8 then return "" end
+	if numeros2 == "" or #numeros2 ~= 8 then numeros2 = numeros1 end
+	numeros1 = tonumber(numeros1)
+	numeros2 = tonumber(numeros2)
+	if numeros1 > numeros2 then numeros1, numeros2 = numeros2, numeros1 end
+	if numeros2 - numeros1 > 50 then numeros2 = numeros1 + 49 end
+	letras1 = (letras1 or ""):upper()
+	letras2 = (letras2 or ""):upper()
+	local resultados = {}
+	for i = numeros1, numeros2 do
+		local dv = gui.calcdv(i)
+		local resultado = string.format("%s%08d%d%s\n", letras1, i, dv, letras2)
+		table.insert(resultados, resultado)
+	end
+	return table.concat(resultados)
+end
+
+if _TEST then
+	return { calcdv = gui.calcdv, sequencia = gui.sequencia }
 end
 
 gui.dialog:show()
