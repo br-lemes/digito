@@ -5,11 +5,17 @@ ifeq ($(TARGET),)
 	TARGET := $(notdir $(CURDIR))
 endif
 
+export CGO_ENABLED=1
+
 IS_NIXOS := $(shell test -f /etc/NIXOS && echo "yes" || echo "")
 INTERPRETER := /lib64/ld-linux-x86-64.so.2
 
+SEMVER := github.com/br-lemes/semver@latest
+
 build: test
 	@go build -ldflags "-s -w"
+
+all: linux windows
 
 clean:
 	$(RM) $(TARGET) $(TARGET).exe
@@ -21,13 +27,13 @@ ifneq ($(IS_NIXOS),)
 endif
 
 release: version linux windows
-	@go run ./tools/release/main.go
+	@go run $(SEMVER) release $(TARGET) $(TARGET).exe
 
 test:
 	@go test ./...
 
 version: test
-	@go run ./tools/version/main.go
+	@go run $(SEMVER)
 
 windows: test
 	@CC=x86_64-w64-mingw32-gcc \

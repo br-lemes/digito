@@ -1,14 +1,17 @@
 package main
 
 import (
+	_ "embed"
 	"fmt"
 	"math"
 	"strconv"
 	"strings"
 
-	"github.com/br-lemes/digito/internal/version"
 	"github.com/gen2brain/iup-go/iup"
 )
+
+//go:embed .version
+var version string
 
 func main() {
 	iup.Open()
@@ -48,7 +51,7 @@ func main() {
 			SetAttribute("MARGIN", "10x10"),
 	).
 		SetAttribute("FONT", "Helvetica, Bold 12").
-		SetAttribute("TITLE", "Digito Verificador "+version.GetVersion()).
+		SetAttribute("TITLE", "Digito Verificador "+version).
 		SetCallback("CLOSE_CB", iup.CloseFunc(onClose)).
 		SetCallback("K_ANY", iup.KAnyFunc(onKey))
 
